@@ -7,9 +7,6 @@ void testApp::setup(){
   ofSetLogLevel(OF_LOG_NOTICE);
   
   background.loadImage("images/bg.jpg");
-  crate.loadImage("images/crate.png");
-  
-  crateSize = 25;
   
   //BOX2D stuff
   box2d.init();
@@ -23,6 +20,11 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
   box2d.update();
+  
+  //if (exists){
+  //myCrate->update();
+  //}
+  
 }
 
 //--------------------------------------------------------------
@@ -30,7 +32,9 @@ void testApp::draw(){
   
   background.draw(0,0);
   
-  ofLog() << crates.size();
+    ofLog() << crates.size();
+  
+ /* ofLog() << crates.size();
   
     for(int i=0; i<crates.size(); i++) {
       ofPushMatrix();
@@ -39,16 +43,25 @@ void testApp::draw(){
       crates[i].draw(-boxes[i].getWidth(),-boxes[i].getHeight());
       //boxes[i].draw();
       ofPopMatrix();
-    }
+    }*/
 
   // draw the ground // makes openframeworks drawing weird for some reason
 	  //box2d.drawGround();
+  
+  //if (exists){
+  // myCrate->draw();
+  //}
+  
+  for(int i=0; i<crates.size(); i++) {
+    crates[i].draw();
+  }
+  
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
   
- if (key == 'r'){
+/* if (key == 'r'){
     for(int i=0; i<boxes.size(); i++) {
       boxes[i].destroy();
       //boxes.erase(i);
@@ -59,7 +72,13 @@ void testApp::keyPressed(int key){
     }
    crates.erase(crates.begin(),crates.end());
    boxes.erase(boxes.begin(),boxes.end());
- }
+ }*/
+  
+  for(int i=0; i<crates.size(); i++) {
+    crates[i].destroy();
+  }
+  
+  crates.erase(crates.begin(),crates.end());
    
 }
 
@@ -81,12 +100,20 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
 
-  ofxBox2dRect rect;
+  /*ofxBox2dRect rect;
   rect.setPhysics(5.0, 0.23, 0.5);
   rect.setup(box2d.getWorld(), mouseX, mouseY, crateSize, crateSize);
   boxes.push_back(rect);
   
-  crates.push_back(crate);
+  crates.push_back(crate);*/
+  
+  crates.push_back(crate(mouseX,mouseY,box2d));
+  
+  //myCrate = new crate(mouseX, mouseY, box2d);
+  
+  //exists = true;
+  
+  //crates.push_back(crate(mouseX, mouseY, box2d));
   
 }
 

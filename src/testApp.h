@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxBox2d.h"
+#include "crate.h"
 
 class testApp : public ofBaseApp{
 	public:
@@ -19,12 +20,19 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
   
+  bool exists = false;
+  
   //BOX2D stuff
     ofxBox2d						box2d;			  //	the box2d world
-    vector		<ofxBox2dRect>		boxes;			  //	defalut box2d rects
+
   
   //OF stuff
-    ofImage background, crate;
-    vector <ofImage> crates;
-    int crateSize;
+    ofImage background;
+  
+  
+  //crate class
+    crate *myCrate;
+    //crate *myCrates;
+    vector <crate> crates;
+    //vector                <crate>                crates;
 };
