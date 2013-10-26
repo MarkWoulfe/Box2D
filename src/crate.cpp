@@ -19,8 +19,6 @@ crate::crate(float _x, float _y, ofxBox2d &world/*, int _crateSize*/){
   
 }
 
-void crate::update(){
-}
 
 void crate::draw(){
   
@@ -33,7 +31,7 @@ void crate::draw(){
 }
 
 void crate::destroy(){
-  
+
   box.destroy();
   crate_image.clear();
   
