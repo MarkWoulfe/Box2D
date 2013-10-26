@@ -38,10 +38,6 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
   
-  for(int i=0; i<crates.size(); i++) {
-    crates[i]->destroy();
-  }
-  
   vector<crate*>::iterator it = crates.begin();
   for(; it != crates.end();){
     delete *it;

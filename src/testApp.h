@@ -21,14 +21,12 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
   
   //BOX2D stuff
-    ofxBox2d						box2dWorld;			  //	the box2d world
+    ofxBox2d box2dWorld;			  //	the box2d world
 
-  
   //OF stuff
     ofImage background;
   
-  
   //vector of crate objects
-  vector <crate*> crates;
+    vector <crate*> crates;
 
 };

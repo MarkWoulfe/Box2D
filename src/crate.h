@@ -17,10 +17,10 @@ class crate {
 public:
   
   void draw();
-  void destroy();
   
   crate(float x,float y, ofxBox2d &world/*,int crateSize*/);
-
+  ~crate();
+  
 private:
 
   ofxBox2dRect		box;
