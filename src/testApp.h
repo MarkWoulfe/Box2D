@@ -29,6 +29,6 @@ class testApp : public ofBaseApp{
   
   
   //vector of crate objects
-  vector <crate> crates;
+  vector <crate*> crates;
 
 };

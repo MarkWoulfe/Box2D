@@ -30,7 +30,7 @@ void testApp::draw(){
   background.draw(0,0);
   
   for(int i=0; i<crates.size(); i++) {
-    crates[i].draw();
+    crates[i]->draw();
   }
   
 }
@@ -39,10 +39,14 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
   
   for(int i=0; i<crates.size(); i++) {
-    crates[i].destroy();
+    crates[i]->destroy();
   }
   
-  crates.erase(crates.begin(),crates.end());
+  vector<crate*>::iterator it = crates.begin();
+  for(; it != crates.end();){
+    delete *it;
+    it = crates.erase(it);
+  }
    
 }
 
@@ -64,7 +68,9 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
   
-  crates.push_back(crate(mouseX,mouseY,box2dWorld));
+  crate *newCrate = new crate(mouseX,mouseY,box2dWorld);
+  
+  crates.push_back(newCrate);
   
 }
 
