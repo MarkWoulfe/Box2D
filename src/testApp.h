@@ -20,13 +20,17 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
   
+  //OF stuff
+    ofImage background, wreckingball;
+  
   //BOX2D stuff
     ofxBox2d box2dWorld;			  //	the box2d world
-
-  //OF stuff
-    ofImage background;
   
   //vector of crate objects
     vector <crate*> crates;
+  
+    ofxBox2dJoint chain;
+    ofxBox2dRect anchor;
+    ofxBox2dCircle ball;
 
 };
