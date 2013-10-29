@@ -20,6 +20,10 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
   
+  //Created functions
+    void wreckingBallSetup();
+    void wreckingBallDraw();
+  
   //OF stuff
     ofImage background, wreckingball;
   
@@ -29,6 +33,7 @@ class testApp : public ofBaseApp{
   //vector of crate objects
     vector <crate*> crates;
   
+  //wrecking ball
     ofxBox2dJoint chain;
     ofxBox2dRect anchor;
     ofxBox2dCircle ball;
