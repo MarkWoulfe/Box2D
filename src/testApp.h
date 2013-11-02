@@ -23,7 +23,7 @@ class testApp : public ofBaseApp{
   //Created functions
     void wreckingBallSetup();
     void wreckingBallDraw();
-    void crateBuilderTriangle(int amount, int pos);
+    void crateBuilderPyramid(int height, int pos);
     void crateDraw();
   
   //OF stuff
@@ -32,12 +32,20 @@ class testApp : public ofBaseApp{
   //BOX2D stuff
     ofxBox2d box2dWorld;
   
-  //vector of crate objects
+  //vector of pointers to crate objects
     vector <crate*> crates;
   
   //wrecking ball
     ofxBox2dJoint chain;
     ofxBox2dRect anchor;
     ofxBox2dCircle ball;
+    ofVec2f wreckingBallForce;
+    short anchorxPos, anchoryPos, anchorSize;
+    short wreckingBallxPos, wreckingBallyPos, wreckingBallSize;
+    short chainLength;
+  
+  //crate formation
+    short cratePyramidHeight, cratePyramidxPos;
+  
 
 };

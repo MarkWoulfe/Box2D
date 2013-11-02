@@ -6,6 +6,18 @@ void testApp::setup(){
   ofSetVerticalSync(true);
   ofSetLogLevel(OF_LOG_NOTICE);
   
+  //initialise our wreckingball variables
+  anchorxPos = wreckingBallxPos = 450;
+  anchoryPos = 100;
+  anchorSize = 20;
+  wreckingBallyPos = 500;
+  wreckingBallSize = 30;
+  chainLength = wreckingBallyPos - anchoryPos;
+  
+  //specify values for our crates
+  cratePyramidHeight = 6;
+  cratePyramidxPos = 600;
+  
   //load in images
   background.loadImage("images/bg.jpg");
   wreckingball.loadImage("images/wreckingball.png");
@@ -16,13 +28,15 @@ void testApp::setup(){
 	box2dWorld.createBounds();
 	box2dWorld.setFPS(30.0);
   
+  //set up the crates and wrecking ball
   wreckingBallSetup();
-  crateBuilderTriangle(6,400);
+  crateBuilderPyramid(cratePyramidHeight,cratePyramidxPos);
   
 }
 //--------------------------------------------------------------
 void testApp::update(){
   
+  //update the world
   box2dWorld.update();
   
 }
@@ -30,6 +44,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
   
+  //draw everything
   background.draw(0,0);
   
   wreckingBallDraw();
@@ -38,11 +53,12 @@ void testApp::draw(){
   
 }
 //--------------------------------------------------------------
-void testApp::crateBuilderTriangle(int amount, int pos){
+void testApp::crateBuilderPyramid(int height, int pos){
   
-  int tempAmount = amount;
+  //create a pyramid of triangles with some random positioning
+  int tempAmount = height;
   
-  for (int i=0;i < amount; i++){
+  for (int i=0;i < height; i++){
     for (int j=0; j < tempAmount; j++ ){
     crate *newCrate = new crate(pos+ofRandom(i*50,i*60)+(j*25),575-j*50,box2dWorld);
     crates.push_back(newCrate);
@@ -64,11 +80,11 @@ void testApp::crateDraw(){
 void testApp::wreckingBallSetup(){
   
   //set up what makes the wrecking ball, a stationary anchor, a box2d circle and a joint combining them
-  anchor.setup(box2dWorld.getWorld(), 250, 100, 20, 20);
-  ball.setPhysics(1000.0, 0.1, 0.5);
-  ball.setup(box2dWorld.getWorld(), 250, 500, 30);
+  anchor.setup(box2dWorld.getWorld(), anchorxPos, anchoryPos, anchorSize, anchorSize);
+  ball.setPhysics(100.0, 0.1, 0.5);
+  ball.setup(box2dWorld.getWorld(), wreckingBallxPos, wreckingBallyPos, wreckingBallSize);
   chain.setup(box2dWorld.getWorld(), anchor.body, ball.body);
-  chain.setLength(400);
+  chain.setLength(chainLength);
   
 }
 //--------------------------------------------------------------
@@ -94,9 +110,6 @@ void testApp::wreckingBallDraw(){
   //ball/circle
   ofPushMatrix();
   ofTranslate(ball.getPosition().x,ball.getPosition().y);
-  //ignore rotation, not necessarily needed
-  //ofRotate(ball.getRotation());
-  //cofLog() << ball.getRotation();
   wreckingball.draw(-ball.getRadius(),-ball.getRadius());
   ofPopMatrix();
   
@@ -105,29 +118,24 @@ void testApp::wreckingBallDraw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
   
-  //delete all crates
+  //delete all crates (code taken from following link - http://www.openframeworks.cc/tutorials/c++%20concepts/001_stl_vectors_basic.html)
   if (key == 'r'){
     vector<crate*>::iterator it = crates.begin();
     for(; it != crates.end();){
       delete *it;
       it = crates.erase(it);
     }
-    ball.setPosition(250, 500);
-    crateBuilderTriangle(6,400);
+    //reset the world
+    ball.setPosition(wreckingBallxPos, wreckingBallyPos);
+    crateBuilderPyramid(cratePyramidHeight,cratePyramidxPos);
   }
   
-  //create a directional vector
-  ofVec2f v1;
-  v1.set(-100000, 0 );
+  //set a force to our vector
+  wreckingBallForce.set(10000, 0 );
   
-  
-  //move the wrecking ball left and right with that force
+  //move the wrecking ball left
   if (key == 'a'){
-    ball.addForce(v1, 1);
-  }
-  
-  if (key == 'd'){
-    ball.addForce(-v1, 1);
+    ball.addForce(-wreckingBallForce, 1);
   }
  
   //reset gravity

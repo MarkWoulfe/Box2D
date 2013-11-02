@@ -28,7 +28,7 @@ private:
   
   float x;
   float y;
-  int crateSize;
+  short crateSize;
   
 };
 
