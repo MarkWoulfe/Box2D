@@ -23,12 +23,14 @@ class testApp : public ofBaseApp{
   //Created functions
     void wreckingBallSetup();
     void wreckingBallDraw();
+    void crateBuilderTriangle(int amount, int pos);
+    void crateDraw();
   
   //OF stuff
     ofImage background, wreckingball;
   
   //BOX2D stuff
-    ofxBox2d box2dWorld;			  //	the box2d world
+    ofxBox2d box2dWorld;
   
   //vector of crate objects
     vector <crate*> crates;

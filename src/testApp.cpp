@@ -15,9 +15,9 @@ void testApp::setup(){
 	box2dWorld.setGravity(0, 10);
 	box2dWorld.createBounds();
 	box2dWorld.setFPS(30.0);
-	//box2dWorld.registerGrabbing();
   
   wreckingBallSetup();
+  crateBuilderTriangle(6,400);
   
 }
 //--------------------------------------------------------------
@@ -34,6 +34,26 @@ void testApp::draw(){
   
   wreckingBallDraw();
   
+  crateDraw();
+  
+}
+//--------------------------------------------------------------
+void testApp::crateBuilderTriangle(int amount, int pos){
+  
+  int tempAmount = amount;
+  
+  for (int i=0;i < amount; i++){
+    for (int j=0; j < tempAmount; j++ ){
+    crate *newCrate = new crate(pos+ofRandom(i*50,i*60)+(j*25),575-j*50,box2dWorld);
+    crates.push_back(newCrate);
+    }
+    tempAmount--;
+  }
+  
+}
+//--------------------------------------------------------------
+void testApp::crateDraw(){
+  
   //draw all the crates
   for(int i=0; i<crates.size(); i++) {
     crates[i]->draw();
@@ -46,7 +66,7 @@ void testApp::wreckingBallSetup(){
   //set up what makes the wrecking ball, a stationary anchor, a box2d circle and a joint combining them
   anchor.setup(box2dWorld.getWorld(), 250, 100, 20, 20);
   ball.setPhysics(1000.0, 0.1, 0.5);
-  ball.setup(box2dWorld.getWorld(), 250, 300, 30);
+  ball.setup(box2dWorld.getWorld(), 250, 500, 30);
   chain.setup(box2dWorld.getWorld(), anchor.body, ball.body);
   chain.setLength(400);
   
@@ -74,6 +94,7 @@ void testApp::wreckingBallDraw(){
   //ball/circle
   ofPushMatrix();
   ofTranslate(ball.getPosition().x,ball.getPosition().y);
+  //ignore rotation, not necessarily needed
   //ofRotate(ball.getRotation());
   //cofLog() << ball.getRotation();
   wreckingball.draw(-ball.getRadius(),-ball.getRadius());
@@ -91,13 +112,8 @@ void testApp::keyPressed(int key){
       delete *it;
       it = crates.erase(it);
     }
-    ball.setPosition(250, 300);
-  }
-  
-  //create a new crate at the mouse position
-  if (key== 'c'){
-    crate *newCrate = new crate(mouseX,mouseY,box2dWorld);
-    crates.push_back(newCrate);
+    ball.setPosition(250, 500);
+    crateBuilderTriangle(6,400);
   }
   
   //create a directional vector
