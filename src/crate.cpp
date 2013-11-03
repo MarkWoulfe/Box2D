@@ -8,14 +8,27 @@
 
 #include "crate.h"
 
-crate::crate(float _x, float _y, ofxBox2d &world/*, int _crateSize*/){
+crate::crate(float _x, float _y, short _crateSize, ofxBox2d &world){
   
   x = _x;
   y = _y;
-  crateSize = 25;
+  crateSize = _crateSize;
   crate_image.loadImage("images/crate.png");
+  crate_image.resize(crateSize*2, crateSize*2);
   box.setPhysics(5.0, 0.23, 0.5);
   box.setup(world.getWorld(), x, y, crateSize, crateSize);
+  
+}
+
+void* crate::getData(){
+  
+  box.getData();
+  
+}
+
+void crate::setData(void* data){
+  
+  box.setData(data);
   
 }
 
@@ -31,6 +44,7 @@ void crate::draw(){
 
 crate::~crate(){
   
+  box.setData(NULL);
   box.destroy();
   crate_image.clear();
   

@@ -31,7 +31,7 @@ class testApp : public ofBaseApp{
   //Created functions
     void wreckingBallSetup();
     void wreckingBallDraw();
-    void crateBuilderPyramid(int height, int pos);
+    void crateBuilderPyramid(int height, int pos, int size);
     void crateDraw();
   
   //OF stuff
@@ -53,7 +53,7 @@ class testApp : public ofBaseApp{
     short chainLength;
   
   //crate formation
-    short cratePyramidHeight, cratePyramidxPos;
+    short cratePyramidHeight, cratePyramidxPos, crateSize;
   
   //Sound
   

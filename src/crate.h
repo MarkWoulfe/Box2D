@@ -12,13 +12,15 @@
 #include "ofMain.h"
 #include "ofxBox2d.h"
 
-class crate : public ofxBox2dRect {
+class crate {
   
 public:
   
   void draw();
+  void* getData();
+  void setData(void* data);
   
-  crate(float x,float y, ofxBox2d &world/*,int crateSize*/);
+  crate(float x,float y, short crateSize, ofxBox2d &world);
   ~crate();
   
 private:
