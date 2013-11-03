@@ -4,6 +4,14 @@
 #include "ofxBox2d.h"
 #include "crate.h"
 
+#define N_SOUNDS 2
+
+class SoundData {
+public:
+  int	 soundID;
+  bool bHit;
+};
+
 class testApp : public ofBaseApp{
 	public:
 		void setup();
@@ -46,6 +54,15 @@ class testApp : public ofBaseApp{
   
   //crate formation
     short cratePyramidHeight, cratePyramidxPos;
+  
+  //Sound
+  
+  // this is the function for contacts
+    void contactStart(ofxBox2dContactArgs &e);
+    void contactEnd(ofxBox2dContactArgs &e);
+  
+	// when the ball hits we play this sound
+    ofSoundPlayer  sound[N_SOUNDS];
   
 
 };

@@ -12,7 +12,7 @@
 #include "ofMain.h"
 #include "ofxBox2d.h"
 
-class crate {
+class crate : public ofxBox2dRect {
   
 public:
   

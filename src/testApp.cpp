@@ -32,12 +32,71 @@ void testApp::setup(){
   wreckingBallSetup();
   crateBuilderPyramid(cratePyramidHeight,cratePyramidxPos);
   
+  //sound
+  for (int i=0; i<N_SOUNDS; i++) {
+		sound[i].loadSound("sfx/"+ofToString(i)+".wav");
+		sound[i].setMultiPlay(true);
+		sound[i].setLoop(false);
+  }
+  
 }
+
+//--------------------------------------------------------------
+void testApp::contactStart(ofxBox2dContactArgs &e) {
+	if(e.a != NULL && e.b != NULL) {
+		
+		// if we collide with the ground we do not
+		// want to play a sound. this is how you do that
+		if(e.a->GetType() == b2Shape::e_circle && e.b->GetType() == b2Shape::e_circle) {
+			
+			SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+			SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
+			
+			if(aData) {
+				aData->bHit = true;
+				sound[aData->soundID].play();
+			}
+			
+			if(bData) {
+				bData->bHit = true;
+				sound[bData->soundID].play();
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------
+void testApp::contactEnd(ofxBox2dContactArgs &e) {
+	if(e.a != NULL && e.b != NULL) {
+		
+		SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+		SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
+		
+		if(aData) {
+			aData->bHit = false;
+		}
+		
+		if(bData) {
+			bData->bHit = false;
+		}
+	}
+}
+
 //--------------------------------------------------------------
 void testApp::update(){
   
   //update the world
   box2dWorld.update();
+  
+  //sound
+  for(int i=0; i<crates.size(); i++) {
+    crates[i]->setData(new SoundData());
+		SoundData * sd = (SoundData*)crates[i]->getData();
+    if(sd!=NULL){
+		sd->soundID = ofRandom(0, 3);
+		sd->bHit	= false;
+    }
+  }
   
 }
 
@@ -61,6 +120,15 @@ void testApp::crateBuilderPyramid(int height, int pos){
   for (int i=0;i < height; i++){
     for (int j=0; j < tempAmount; j++ ){
     crate *newCrate = new crate(pos+ofRandom(i*50,i*60)+(j*25),575-j*50,box2dWorld);
+      
+      //sound
+      newCrate->setData(new SoundData());
+      SoundData * sd = (SoundData*)newCrate->getData();
+      if(sd!=NULL){ //sd is always null, this is broken :(
+        sd->soundID = ofRandom(0, 3);
+        sd->bHit	= false;
+      }
+      
     crates.push_back(newCrate);
     }
     tempAmount--;
