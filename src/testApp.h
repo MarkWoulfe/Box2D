@@ -4,8 +4,7 @@
 #include "ofxBox2d.h"
 #include "crate.h"
 
-class SoundData {
-public:
+struct SoundData {
   bool bHit = false;
 };
 
@@ -32,7 +31,7 @@ class testApp : public ofBaseApp{
     void crateDraw();
   
   //OF stuff
-    ofImage background, wreckingball;
+    ofImage background, wreckingball, craneArm;
   
   //BOX2D stuff
     ofxBox2d box2dWorld;

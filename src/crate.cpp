@@ -15,7 +15,7 @@ crate::crate(float _x, float _y, short _crateSize, ofxBox2d &world){
   crateSize = _crateSize;
   crate_image.loadImage("images/crate.png");
   crate_image.resize(crateSize*2, crateSize*2);
-  box.setPhysics(5.0, 0.23, 0.5);
+  box.setPhysics(2.5, 0.23, 0.5);
   box.setup(world.getWorld(), x, y, crateSize, crateSize);
   
 }

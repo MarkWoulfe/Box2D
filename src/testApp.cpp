@@ -7,20 +7,21 @@ void testApp::setup(){
   ofSetLogLevel(OF_LOG_NOTICE);
   
   //initialise our wreckingball variables
-  anchorxPos = wreckingBallxPos = 450;
+  anchorxPos = wreckingBallxPos = 425;
   anchoryPos = 100;
-  anchorSize = 20;
-  wreckingBallyPos = 500;
+  anchorSize = 25;
+  wreckingBallyPos = 475;
   wreckingBallSize = 30;
   chainLength = wreckingBallyPos - anchoryPos;
   
   //specify values for our crates
-  crateTowerHeight = 8;
-  crateTowerxPos = 600;
+  crateTowerHeight = 5;
+  crateTowerxPos = 650;
   
   //load in images
   background.loadImage("images/bg.jpg");
   wreckingball.loadImage("images/wreckingball.png");
+  craneArm.loadImage("images/crane.png");
   
   //set up the world
   box2dWorld.init();
@@ -37,7 +38,7 @@ void testApp::setup(){
 	ofAddListener(box2dWorld.contactEndEvents, this, &testApp::contactEnd);
   
   //sound
-  sound.loadSound("sfx/1.wav");
+  sound.loadSound("sfx/2.wav");
   sound.setMultiPlay(true);
   sound.setLoop(false);
   
@@ -103,10 +104,10 @@ void testApp::draw(){
 void testApp::crateBuilderTower(int height, int pos){
   
   //create a pyramid of triangles with some random positioning
-  int size = 30-height;
+  int size = 25-height;
   
   for (int i=0;i < height; i++){
-    for (int j=0; j < height*1.5; j++ ){
+    for (int j=0; j < height*2; j++ ){
     crate *newCrate = new crate(pos+ofRandom(i*(size*2),i*(size*2.5)),ofGetHeight()-size-j*(size*2), size, box2dWorld);
     crates.push_back(newCrate);
     }
@@ -140,22 +141,19 @@ void testApp::wreckingBallSetup(){
 //--------------------------------------------------------------
 void testApp::wreckingBallDraw(){
   
-  //anchor
-  ofPushMatrix();
-  ofTranslate(anchor.getPosition().x,anchor.getPosition().y);
-  ofPushStyle();
-  ofFill();
-  ofSetColor(175, 175, 175);
-  ofRect(-anchor.getWidth(), -anchor.getHeight(), 40, 525);
-  ofPopStyle();
-  ofPopMatrix();
-  
   //joint
   ofPushStyle();
-  ofFill();
-  ofSetColor(128, 128, 128);
+  ofSetColor(165,127,45);
+  glLineWidth(3);
   chain.draw();
   ofPopStyle();
+  
+  //craneArm
+  ofPushMatrix();
+  ofTranslate(anchor.getPosition().x,anchor.getPosition().y);
+  ofRotate(75);
+  craneArm.draw(-anchor.getWidth(),-anchor.getHeight()+10);
+  ofPopMatrix();
   
   //ball/circle
   ofPushMatrix();
@@ -178,10 +176,11 @@ void testApp::keyPressed(int key){
     //reset the world
     ball.setPosition(wreckingBallxPos, wreckingBallyPos);
     crateBuilderTower(crateTowerHeight,crateTowerxPos);
+    box2dWorld.setGravity(0,10);
   }
   
   //set a force to our vector
-  wreckingBallForce.set(10000, 0 );
+  wreckingBallForce.set(20000, 0 );
   
   //move the wrecking ball left
   if (key == 'a'){
