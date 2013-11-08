@@ -38,7 +38,7 @@ void testApp::setup(){
 	ofAddListener(box2dWorld.contactEndEvents, this, &testApp::contactEnd);
   
   //sound
-  sound.loadSound("sfx/2.wav");
+  sound.loadSound("sfx/1.wav");
   sound.setMultiPlay(true);
   sound.setLoop(false);
   
