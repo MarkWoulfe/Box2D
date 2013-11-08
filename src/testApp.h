@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxBox2d.h"
 #include "crate.h"
+#include "ofxUI.h"
 
 struct SoundData {
   bool bHit = false;
@@ -13,6 +14,7 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+    void exit();
 		
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -23,12 +25,14 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    void guiEvent(ofxUIEventArgs &e);
   
   //Created functions
     void wreckingBallSetup();
     void wreckingBallDraw();
     void crateBuilderTower(int height, int pos);
     void crateDraw();
+    void guiDraw();
   
   //OF stuff
     ofImage background, wreckingball, craneArm;
@@ -49,16 +53,21 @@ class testApp : public ofBaseApp{
     short chainLength;
   
   //crate formation
-    short crateTowerHeight, crateTowerxPos;
+    short crateTowerxPos;
+    float crateTowerWidth;
   
   //Sound
   
-  // this is the function for contacts
+  //this is the function for contacts
     void contactStart(ofxBox2dContactArgs &e);
     void contactEnd(ofxBox2dContactArgs &e);
   
-	// when the ball hits we play this sound
-  ofSoundPlayer  sound;
+	//when the ball hits we play this sound
+    ofSoundPlayer  sound;
+  
+  //GUI
+    ofxUISuperCanvas *gui;
+    short guiWidth, guixPos;
   
 
 };

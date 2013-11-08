@@ -15,7 +15,7 @@ void testApp::setup(){
   chainLength = wreckingBallyPos - anchoryPos;
   
   //specify values for our crates
-  crateTowerHeight = 5;
+  crateTowerWidth = 5;
   crateTowerxPos = 650;
   
   //load in images
@@ -31,7 +31,7 @@ void testApp::setup(){
   
   //set up the crates and wrecking ball
   wreckingBallSetup();
-  crateBuilderTower(crateTowerHeight,crateTowerxPos);
+  crateBuilderTower(crateTowerWidth,crateTowerxPos);
   
   // register the listener so that we get the events
 	ofAddListener(box2dWorld.contactStartEvents, this, &testApp::contactStart);
@@ -41,6 +41,9 @@ void testApp::setup(){
   sound.loadSound("sfx/1.wav");
   sound.setMultiPlay(true);
   sound.setLoop(false);
+  
+  //GUI
+  guiDraw();
   
 }
 //following two functions taken from a sound example, as the wrecking ball
@@ -98,6 +101,23 @@ void testApp::draw(){
   wreckingBallDraw();
   
   crateDraw();
+  
+}
+//--------------------------------------------------------------
+void testApp::guiDraw(){
+  
+  //create a GUI with a title, some text, a slider and a button
+  guiWidth = 310;
+  guixPos = ofGetWidth() - guiWidth;
+  gui = new ofxUISuperCanvas("Menu - double click here for options", guixPos, 0, guiWidth, 100, OFX_UI_FONT_MEDIUM);
+  gui->toggleMinified();
+  gui->addSpacer();
+  gui->addTextArea("Instructions", "Here you can create a newly sized crate tower.");
+  gui->addSpacer();
+  ofxUISlider *slider = (ofxUISlider*) gui->addSlider("Width", 2, 8, &crateTowerWidth);
+  slider->setLabelPrecision(0);
+  gui->addLabelButton("New Tower", false);
+  ofAddListener(gui->newGUIEvent,this,&testApp::guiEvent);
   
 }
 //--------------------------------------------------------------
@@ -164,10 +184,14 @@ void testApp::wreckingBallDraw(){
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
-  
-  //delete all crates (code taken from following link - http://www.openframeworks.cc/tutorials/c++%20concepts/001_stl_vectors_basic.html)
-  if (key == 'r'){
+void testApp::guiEvent(ofxUIEventArgs &e)
+{
+  //check if the new tower button has been pressed, then reset the scene with the new tower
+  if(e.widget->getName() == "New Tower")
+  {
+    ofxUIButton *button = (ofxUIButton *) e.widget;
+    if (button->getValue()){
+    //delete all crates (code taken from following link - http://www.openframeworks.cc/tutorials/c++%20concepts/001_stl_vectors_basic.html)
     vector<crate*>::iterator it = crates.begin();
     for(; it != crates.end();){
       delete *it;
@@ -175,9 +199,19 @@ void testApp::keyPressed(int key){
     }
     //reset the world
     ball.setPosition(wreckingBallxPos, wreckingBallyPos);
-    crateBuilderTower(crateTowerHeight,crateTowerxPos);
+    crateBuilderTower(crateTowerWidth,crateTowerxPos);
     box2dWorld.setGravity(0,10);
+    }
   }
+}
+//--------------------------------------------------------------
+void testApp::exit()
+{
+  delete gui;
+}
+
+//--------------------------------------------------------------
+void testApp::keyPressed(int key){
   
   //set a force to our vector
   wreckingBallForce.set(20000, 0 );
