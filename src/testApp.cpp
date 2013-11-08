@@ -148,17 +148,17 @@ void testApp::wreckingBallDraw(){
   chain.draw();
   ofPopStyle();
   
+  //ball/circle
+  ofPushMatrix();
+  ofTranslate(ball.getPosition().x,ball.getPosition().y);
+  wreckingball.draw(-ball.getRadius(),-ball.getRadius());
+  ofPopMatrix();
+  
   //craneArm
   ofPushMatrix();
   ofTranslate(anchor.getPosition().x,anchor.getPosition().y);
   ofRotate(75);
   craneArm.draw(-anchor.getWidth(),-anchor.getHeight()+10);
-  ofPopMatrix();
-  
-  //ball/circle
-  ofPushMatrix();
-  ofTranslate(ball.getPosition().x,ball.getPosition().y);
-  wreckingball.draw(-ball.getRadius(),-ball.getRadius());
   ofPopMatrix();
   
 }
