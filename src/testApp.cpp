@@ -15,9 +15,8 @@ void testApp::setup(){
   chainLength = wreckingBallyPos - anchoryPos;
   
   //specify values for our crates
-  cratePyramidHeight = 15;
-  cratePyramidxPos = 600;
-  crateSize = 10;
+  crateTowerHeight = 8;
+  crateTowerxPos = 600;
   
   //load in images
   background.loadImage("images/bg.jpg");
@@ -31,56 +30,54 @@ void testApp::setup(){
   
   //set up the crates and wrecking ball
   wreckingBallSetup();
-  crateBuilderPyramid(cratePyramidHeight,cratePyramidxPos,crateSize);
-  
+  crateBuilderTower(crateTowerHeight,crateTowerxPos);
   
   // register the listener so that we get the events
 	ofAddListener(box2dWorld.contactStartEvents, this, &testApp::contactStart);
 	ofAddListener(box2dWorld.contactEndEvents, this, &testApp::contactEnd);
   
   //sound
-  for (int i=0; i<N_SOUNDS; i++) {
-		sound[i].loadSound("sfx/"+ofToString(i)+".wav");
-		sound[i].setMultiPlay(true);
-		sound[i].setLoop(false);
-  }
+  sound.loadSound("sfx/1.wav");
+  sound.setMultiPlay(true);
+  sound.setLoop(false);
   
 }
-
+//following two functions taken from a sound example, as the wrecking ball
+//object is the only one we give sounddata to, we don't need half of the code
 //--------------------------------------------------------------
 void testApp::contactStart(ofxBox2dContactArgs &e) {
-	if(e.a != NULL && e.b != NULL) {
+	//if(e.a != NULL && e.b != NULL) {
 			
-			SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+			//SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
 			SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
 			
-			if(aData) {
+			/*if(aData) {
 				aData->bHit = true;
-        sound[aData->soundID].play();
-			}
+        sound.play();
+			}*/
 			
 			if(bData) {
 				bData->bHit = true;
-				sound[bData->soundID].play();
+				sound.play();
 			}
-   }
+   //}
 }
 
 //--------------------------------------------------------------
 void testApp::contactEnd(ofxBox2dContactArgs &e) {
-	if(e.a != NULL && e.b != NULL) {
+	//if(e.a != NULL && e.b != NULL) {
 		
-		SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+		//SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
 		SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
 		
-		if(aData) {
+		/*if(aData) {
 			aData->bHit = false;
-		}
+		}*/
 		
 		if(bData) {
 			bData->bHit = false;
 		}
-	}
+	//}
 }
 
 //--------------------------------------------------------------
@@ -103,24 +100,16 @@ void testApp::draw(){
   
 }
 //--------------------------------------------------------------
-void testApp::crateBuilderPyramid(int height, int pos, int size){
+void testApp::crateBuilderTower(int height, int pos){
   
   //create a pyramid of triangles with some random positioning
-  int tempAmount = height;
+  int size = 30-height;
   
   for (int i=0;i < height; i++){
-    for (int j=0; j < tempAmount; j++ ){
-    crate *newCrate = new crate(pos+ofRandom(i*(size*2),i*(size*2.5))+(j*size),ofGetHeight()-size-j*(size*2), size, box2dWorld);
-      
-      //sound
-      newCrate->setData(new SoundData());
-      SoundData * sd = (SoundData*)newCrate->getData();
-      //sd->soundID = ofRandom(3);
-      sd->bHit	= false;
-      
+    for (int j=0; j < height*1.5; j++ ){
+    crate *newCrate = new crate(pos+ofRandom(i*(size*2),i*(size*2.5)),ofGetHeight()-size-j*(size*2), size, box2dWorld);
     crates.push_back(newCrate);
     }
-    tempAmount--;
   }
   
 }
@@ -140,6 +129,10 @@ void testApp::wreckingBallSetup(){
   anchor.setup(box2dWorld.getWorld(), anchorxPos, anchoryPos, anchorSize, anchorSize);
   ball.setPhysics(100.0, 0.1, 0.5);
   ball.setup(box2dWorld.getWorld(), wreckingBallxPos, wreckingBallyPos, wreckingBallSize);
+  
+  //sound
+  ball.setData(new SoundData());
+  
   chain.setup(box2dWorld.getWorld(), anchor.body, ball.body);
   chain.setLength(chainLength);
   
@@ -182,10 +175,9 @@ void testApp::keyPressed(int key){
       delete *it;
       it = crates.erase(it);
     }
-
     //reset the world
     ball.setPosition(wreckingBallxPos, wreckingBallyPos);
-    crateBuilderPyramid(cratePyramidHeight,cratePyramidxPos,crateSize);
+    crateBuilderTower(crateTowerHeight,crateTowerxPos);
   }
   
   //set a force to our vector

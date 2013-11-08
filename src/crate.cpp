@@ -20,18 +20,6 @@ crate::crate(float _x, float _y, short _crateSize, ofxBox2d &world){
   
 }
 
-void* crate::getData(){
-  
-  box.getData();
-  
-}
-
-void crate::setData(void* data){
-  
-  box.setData(data);
-  
-}
-
 void crate::draw(){
   
   ofPushMatrix();
@@ -44,7 +32,6 @@ void crate::draw(){
 
 crate::~crate(){
   
-  box.setData(NULL);
   box.destroy();
   crate_image.clear();
   

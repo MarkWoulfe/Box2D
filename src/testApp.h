@@ -4,12 +4,9 @@
 #include "ofxBox2d.h"
 #include "crate.h"
 
-#define N_SOUNDS 2
-
 class SoundData {
 public:
-  int	 soundID;
-  bool bHit;
+  bool bHit = false;
 };
 
 class testApp : public ofBaseApp{
@@ -31,7 +28,7 @@ class testApp : public ofBaseApp{
   //Created functions
     void wreckingBallSetup();
     void wreckingBallDraw();
-    void crateBuilderPyramid(int height, int pos, int size);
+    void crateBuilderTower(int height, int pos);
     void crateDraw();
   
   //OF stuff
@@ -53,7 +50,7 @@ class testApp : public ofBaseApp{
     short chainLength;
   
   //crate formation
-    short cratePyramidHeight, cratePyramidxPos, crateSize;
+    short crateTowerHeight, crateTowerxPos;
   
   //Sound
   
@@ -62,7 +59,7 @@ class testApp : public ofBaseApp{
     void contactEnd(ofxBox2dContactArgs &e);
   
 	// when the ball hits we play this sound
-    ofSoundPlayer  sound[N_SOUNDS];
+  ofSoundPlayer  sound;
   
 
 };
