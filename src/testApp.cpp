@@ -10,9 +10,9 @@ void testApp::setup(){
   anchorxPos = wreckingBallxPos = 425;
   anchoryPos = 100;
   anchorSize = 25;
-  wreckingBallyPos = 475;
+  chainLength = 375;
+  wreckingBallyPos = anchoryPos + chainLength;
   wreckingBallSize = 30;
-  chainLength = wreckingBallyPos - anchoryPos;
   
   //specify values for our crates
   crateTowerWidth = 5;
@@ -114,9 +114,9 @@ void testApp::guiDraw(){
   gui->addSpacer();
   gui->addTextArea("Instructions", "Here you can create a newly sized crate tower.");
   gui->addSpacer();
-  ofxUISlider *slider = (ofxUISlider*) gui->addSlider("Width", 2, 8, &crateTowerWidth);
-  slider->setLabelPrecision(0);
-  gui->addLabelButton("New Tower", false);
+  gui->addSlider("Width", 2, 8, &crateTowerWidth,guiWidth*0.5,10,0,0);
+  gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
+  gui->addButton("New Tower", false);
   ofAddListener(gui->newGUIEvent,this,&testApp::guiEvent);
   
 }
@@ -214,7 +214,7 @@ void testApp::exit()
 void testApp::keyPressed(int key){
   
   //set a force to our vector
-  wreckingBallForce.set(20000, 0 );
+  wreckingBallForce.set(20000, 0);
   
   //move the wrecking ball left
   if (key == 'a'){
@@ -224,6 +224,21 @@ void testApp::keyPressed(int key){
   //reset gravity
   if (key == 'g'){
     box2dWorld.setGravity(-box2dWorld.getGravity());
+  }
+  
+  //wrecking ball movement, move it up and down within reason
+  if (key == 'w'){
+    if(chainLength > wreckingBallSize*3){
+      chain.setLength(chainLength-=wreckingBallSize);
+      if(ball.isSleeping()) ball.setPosition(ball.getPosition().x, ball.getPosition().y-50);
+    }
+  }
+  
+  if (key == 's'){
+    if(chainLength < (ofGetHeight()-anchoryPos)-wreckingBallSize*3){
+      chain.setLength(chainLength+=wreckingBallSize);
+      if(ball.isSleeping()) ball.setPosition(ball.getPosition().x, ball.getPosition().y+50);
+    }
   }
   
 }
