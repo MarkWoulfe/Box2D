@@ -109,14 +109,22 @@ void testApp::guiDraw(){
   //create a GUI with a title, some text, a slider and a button
   guiWidth = 310;
   guixPos = ofGetWidth() - guiWidth;
-  gui = new ofxUISuperCanvas("Menu - double click here for options", guixPos, 0, guiWidth, 100, OFX_UI_FONT_MEDIUM);
+  gui = new ofxUISuperCanvas("Menu - 'M' to toggle", guixPos, 0, guiWidth, 100, OFX_UI_FONT_MEDIUM);
   gui->toggleMinified();
   gui->addSpacer();
-  gui->addTextArea("Instructions", "Here you can create a newly sized crate tower.");
+  gui->addTextArea("Instructions", "Set a new width and spawn a new tower with the slider and button below");
   gui->addSpacer();
-  gui->addSlider("Width", 2, 8, &crateTowerWidth,guiWidth*0.5,10,0,0);
+  gui->addSlider("Width", 2, 8, &crateTowerWidth,guiWidth*0.5,8,0,100);
   gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
   gui->addButton("New Tower", false);
+  gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
+  gui->addSpacer();
+  gui->addLabel("Control label", "Controls");
+  gui->addSpacer();
+  gui->addTextArea("controls", "M  - toggle the menu on/off");
+  gui->addTextArea("controls2", "W - shorten the wrecking ball chain");
+  gui->addTextArea("controls3", "S  - lengthen the wrecking ball chain");
+  gui->addTextArea("controls4", "A  - pull the wrecking ball backwards (hold)");
   ofAddListener(gui->newGUIEvent,this,&testApp::guiEvent);
   
 }
@@ -224,6 +232,10 @@ void testApp::keyPressed(int key){
   //reset gravity
   if (key == 'g'){
     box2dWorld.setGravity(-box2dWorld.getGravity());
+  }
+  
+  if (key == 'm'){
+    gui->toggleMinified();
   }
   
   //wrecking ball movement, move it up and down within reason
