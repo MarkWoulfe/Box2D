@@ -4,7 +4,6 @@
 void testApp::setup(){
   
   ofSetVerticalSync(true);
-  ofSetLogLevel(OF_LOG_NOTICE);
   
   //initialise our wreckingball variables
   anchorxPos = wreckingBallxPos = 425;
@@ -46,8 +45,8 @@ void testApp::setup(){
   guiDraw();
   
 }
-//following two functions taken from a sound example, as the wrecking ball
-//object is the only one we give sounddata to, we don't need half of the code
+//following two functions taken from a sound example (AKA not my code), as the wrecking ball
+//object is the only one we give sounddata to, we don't need half of the code but i've left it in for clarification
 //--------------------------------------------------------------
 void testApp::contactStart(ofxBox2dContactArgs &e) {
 	//if(e.a != NULL && e.b != NULL) {
@@ -106,11 +105,11 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::guiDraw(){
   
-  //create a GUI with a title, some text, a slider and a button
+  //create a GUI with a title, some text, a slider and a button and some control explanation
   guiWidth = 310;
   guixPos = ofGetWidth() - guiWidth;
   gui = new ofxUISuperCanvas("Menu - 'M' to toggle", guixPos, 0, guiWidth, 100, OFX_UI_FONT_MEDIUM);
-  gui->toggleMinified();
+  gui->toggleMinified();   //have the menu start minimized
   gui->addSpacer();
   gui->addTextArea("Instructions", "Set a new width and spawn a new tower with the slider and button below");
   gui->addSpacer();
@@ -125,13 +124,14 @@ void testApp::guiDraw(){
   gui->addTextArea("controls2", "W - shorten the wrecking ball chain");
   gui->addTextArea("controls3", "S  - lengthen the wrecking ball chain");
   gui->addTextArea("controls4", "A  - pull the wrecking ball backwards (hold)");
-  ofAddListener(gui->newGUIEvent,this,&testApp::guiEvent);
+  ofAddListener(gui->newGUIEvent,this,&testApp::guiEvent); // add a listener to listen out for events coming from the GUI
   
 }
 //--------------------------------------------------------------
 void testApp::crateBuilderTower(int height, int pos){
   
-  //create a pyramid of triangles with some random positioning
+  //create a tower of triangles with some random positioning and have the size of the crates related to the size of the tower
+  //so the screen isn't overcome with crates
   int size = 25-height;
   
   for (int i=0;i < height; i++){
@@ -159,7 +159,7 @@ void testApp::wreckingBallSetup(){
   ball.setPhysics(100.0, 0.1, 0.5);
   ball.setup(box2dWorld.getWorld(), wreckingBallxPos, wreckingBallyPos, wreckingBallSize);
   
-  //sound
+  //add sounddata to our wrecking ball which at this point is just a boolean checking if it has been hit or not
   ball.setData(new SoundData());
   
   chain.setup(box2dWorld.getWorld(), anchor.body, ball.body);
@@ -169,20 +169,20 @@ void testApp::wreckingBallSetup(){
 //--------------------------------------------------------------
 void testApp::wreckingBallDraw(){
   
-  //joint
+  //joint, simply drawn using the box2d defaults (well, with an openframeworks color/line)
   ofPushStyle();
   ofSetColor(165,127,45);
   glLineWidth(3);
   chain.draw();
   ofPopStyle();
   
-  //ball/circle
+  //ball/circle (image)
   ofPushMatrix();
   ofTranslate(ball.getPosition().x,ball.getPosition().y);
   wreckingball.draw(-ball.getRadius(),-ball.getRadius());
   ofPopMatrix();
   
-  //craneArm
+  //craneArm (image)
   ofPushMatrix();
   ofTranslate(anchor.getPosition().x,anchor.getPosition().y);
   ofRotate(75);
@@ -199,12 +199,13 @@ void testApp::guiEvent(ofxUIEventArgs &e)
   {
     ofxUIButton *button = (ofxUIButton *) e.widget;
     if (button->getValue()){
-    //delete all crates (code taken from following link - http://www.openframeworks.cc/tutorials/c++%20concepts/001_stl_vectors_basic.html)
-    vector<crate*>::iterator it = crates.begin();
-    for(; it != crates.end();){
-      delete *it;
-      it = crates.erase(it);
-    }
+      //delete all crates (code taken from following link - http://www.openframeworks.cc/tutorials/c++%20concepts/001_stl_vectors_basic.html)
+      //the code in general deletes all objects being pointed to and pointers themselves
+      vector<crate*>::iterator it = crates.begin();
+      for(; it != crates.end();){
+        delete *it;
+        it = crates.erase(it);
+      }
     //reset the world
     ball.setPosition(wreckingBallxPos, wreckingBallyPos);
     crateBuilderTower(crateTowerWidth,crateTowerxPos);
@@ -215,6 +216,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 //--------------------------------------------------------------
 void testApp::exit()
 {
+  //delete the GUI
   delete gui;
 }
 
@@ -229,16 +231,17 @@ void testApp::keyPressed(int key){
     ball.addForce(-wreckingBallForce, 1);
   }
  
-  //reset gravity
+  //flip gravity (because why not)
   if (key == 'g'){
     box2dWorld.setGravity(-box2dWorld.getGravity());
   }
   
+  //toggle minimizing/maximizing the menu
   if (key == 'm'){
     gui->toggleMinified();
   }
   
-  //wrecking ball movement, move it up and down within reason
+  //wrecking ball movement, move it up and down within reason (so it doesnt collide with the floor or anchor)
   if (key == 'w'){
     if(chainLength > wreckingBallSize*3){
       chain.setLength(chainLength-=wreckingBallSize);

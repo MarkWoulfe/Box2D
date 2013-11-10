@@ -5,11 +5,8 @@
 #include "crate.h"
 #include "ofxUI.h"
 
-struct SoundData {
-  bool bHit = false;
-};
-
 class testApp : public ofBaseApp{
+  //all default OF functions
 	public:
 		void setup();
 		void update();
@@ -28,13 +25,17 @@ class testApp : public ofBaseApp{
     void guiEvent(ofxUIEventArgs &e);
   
   //Created functions
+  
+    //functions to tidy our wrecking ball and crate tower code away
     void wreckingBallSetup();
     void wreckingBallDraw();
     void crateBuilderTower(int height, int pos);
     void crateDraw();
+  
+    //a function for drawing our GUI
     void guiDraw();
   
-  //OF stuff
+  //Image stuff
     ofImage background, wreckingball, craneArm;
   
   //BOX2D stuff
@@ -57,6 +58,11 @@ class testApp : public ofBaseApp{
     float crateTowerWidth;
   
   //Sound
+  
+  //a struct used in the sound detection with a boolean for detecting if a collision has happened
+    struct SoundData {
+      bool bHit = false;
+    };
   
   //this is the function for contacts
     void contactStart(ofxBox2dContactArgs &e);

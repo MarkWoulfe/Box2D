@@ -10,6 +10,7 @@
 
 crate::crate(float _x, float _y, short _crateSize, ofxBox2d &world){
   
+  //get in all our values and set up our image to the correct scale then create our box and set some physics for it
   x = _x;
   y = _y;
   crateSize = _crateSize;
@@ -22,6 +23,7 @@ crate::crate(float _x, float _y, short _crateSize, ofxBox2d &world){
 
 void crate::draw(){
   
+  //draw the image and have it rotate as the box2d object rotates
   ofPushMatrix();
   ofTranslate(box.getPosition().x,box.getPosition().y);
   ofRotate(box.getRotation());
@@ -32,6 +34,7 @@ void crate::draw(){
 
 crate::~crate(){
   
+  //destroy both the box2d object and clear the image
   box.destroy();
   crate_image.clear();
   
